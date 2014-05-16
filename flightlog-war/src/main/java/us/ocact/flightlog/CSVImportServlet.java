@@ -2,7 +2,6 @@ package us.ocact.flightlog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,8 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -45,15 +45,16 @@ public class CSVImportServlet extends HttpServlet {
 		try {
 			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 			Key flightlogKey = KeyFactory.createKey("Flightlog", user.getUserId());
-			List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req);
 			
-			for(FileItem item : items) {
-				if(!item.isFormField()) {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(item.getInputStream()));
-					String line = null;
-					while((line = reader.readLine()) != null) {
-						datastore.put(parseLine(flightlogKey, line));
-					}
+			ServletFileUpload upload = new ServletFileUpload();
+			FileItemIterator iter = upload.getItemIterator(req);
+			
+			while(iter.hasNext()) {
+				FileItemStream item = iter.next();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(item.openStream()));
+				String line = null;
+				while((line = reader.readLine()) != null) {
+					datastore.put(parseLine(flightlogKey, line));
 				}
 			}
 			

@@ -49,7 +49,7 @@ public class FlightlogServlet extends HttpServlet {
 			flight.setProperty("pic_time", Integer.parseInt(req.getParameter("pic_time")));
 			flight.setProperty("dual_time", Integer.parseInt(req.getParameter("dual_time")));
 			flight.setProperty("price", Float.parseFloat(req.getParameter("price")));
-			flight.setProperty("remarks", req.getParameter("landings"));
+			flight.setProperty("remarks", req.getParameter("remarks"));
 
 			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 			datastore.put(flight);
