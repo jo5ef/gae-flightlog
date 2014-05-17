@@ -10,6 +10,9 @@
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
@@ -30,7 +33,7 @@
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Key flightlogKey = KeyFactory.createKey("Flightlog", user.getUserId());
 		Query query = new Query("Flight", flightlogKey).addSort("departure_time", Query.SortDirection.ASCENDING);
-		List<Entity> flights = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(400));
+		List<Entity> flights = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(800));
 		
 		if(flights.isEmpty()) {
 	%>
@@ -41,14 +44,14 @@
 		<table>
 			<thead>
 				<tr>
-					<th>registration</th>
-					<th>model</th>
+					<th>#</th>
+					<th>date</th>
+					<th colspan="2">aircraft</th>
 					<th>crew</th>
-					<th>departure</th>
-					<th>departure time</th>
-					<th>destination</th>
-					<th>arrival time</th>
+					<th colspan="2">departure</th>
+					<th colspan="2">arrival</th>
 					<th>landings</th>
+					<th>flighttime</th>
 					<th>pic time</th>
 					<th>dual time</th>
 					<th>price</th>
@@ -57,23 +60,64 @@
 			</thead>
 			<tbody>
 				<%
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+					int count = 1, i = 0;
+					int total_flighttime = 0, total_pictime = 0, total_dualtime = 0;
+					
 					for(Entity flight : flights) {
+						int landings = ((Long) flight.getProperty("landings")).intValue();
+						Date departure_time = (Date) flight.getProperty("departure_time");
+						Date arrival_time = (Date) flight.getProperty("arrival_time");
+						
+						int flighttime = (int) (arrival_time.getTime() - departure_time.getTime()) / 1000 / 60;
+						int pic_time = ((Long) flight.getProperty("pic_time")).intValue();
+						int dual_time = ((Long) flight.getProperty("dual_time")).intValue();
 				%>
+						<%
+							if(i++ % 15 == 0) {
+						%>
+							<tr class="total">
+								<td colspan="10"></td>
+								<td><%= String.format("%02d:%02d", total_flighttime / 60, total_flighttime % 60) %></td>
+								<td><%= String.format("%02d:%02d", total_pictime / 60, total_pictime % 60) %></td>
+								<td><%= String.format("%02d:%02d", total_dualtime / 60, total_dualtime % 60) %></td>
+								<td colspan="2"></td>
+							</tr>
+						<%
+							}
+						%>
 					<tr>
-						<td><%= flight.getProperty("registration") %></td> 
+						<td>
+							<%= count %>
+							<%
+								if(landings > 1) {
+							%>
+								- <%= count + landings - 1 %>
+							<%
+								}
+								count += landings;
+							%>
+						</td>
+						<td><%= df.format(departure_time) %></td>
+						<td><%= flight.getProperty("registration") %></td>
 						<td><%= flight.getProperty("model") %></td>
 						<td><%= flight.getProperty("crew") %></td>
 						<td><%= flight.getProperty("departure_id") %></td>
-						<td><%= flight.getProperty("departure_time") %></td>
+						<td><%= tf.format(departure_time) %></td>
 						<td><%= flight.getProperty("destination") %></td>
-						<td><%= flight.getProperty("arrival_time") %></td>
-						<td><%= flight.getProperty("landings") %></td>
-						<td><%= flight.getProperty("pic_time") %></td>
-						<td><%= flight.getProperty("dual_time") %></td>
-						<td><%= flight.getProperty("price") %></td>
+						<td><%= tf.format(arrival_time) %></td>
+						<td><%= landings %></td>
+						<td><%= String.format("%02d:%02d", flighttime / 60, flighttime % 60) %></td>
+						<td><%= String.format("%02d:%02d", pic_time / 60, pic_time % 60) %></td>
+						<td><%= String.format("%02d:%02d", dual_time / 60, dual_time % 60) %></td>
+						<td><%= String.format("%.2f", flight.getProperty("price")) %></td>
 						<td><%= flight.getProperty("remarks") %></td>
 					</tr>
 				<%
+						total_flighttime += flighttime;
+						total_pictime += pic_time;
+						total_dualtime += dual_time;
 					}
 				%>
 			<tbody>
@@ -81,6 +125,11 @@
 	<%
 		}
 	%>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
 	<form action="/flightlog" method="post">
 		<table>
 			<thead>

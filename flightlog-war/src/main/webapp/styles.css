@@ -1,0 +1,20 @@
+body {
+	font-family: sans-serif;
+}
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	border: 1px solid black;
+	padding: 1px 6px;
+}
+
+tr.total {
+	font-weight: bold;
+}
+
+tr.total td {
+	padding: 5px 6px;
+	border: none; 
+}
