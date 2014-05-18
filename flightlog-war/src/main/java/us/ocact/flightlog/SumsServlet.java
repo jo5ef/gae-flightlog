@@ -113,7 +113,11 @@ public class SumsServlet extends HttpServlet {
 				}, 
 				new DatastoreOutput(15));
 		
-		resp.sendRedirect("/_ah/pipeline/status.html?root=" + MapReduceJob.start(spec, new MapReduceSettings()));
+		MapReduceSettings settings = new MapReduceSettings();
+		settings.setBucketName("jo5ef-flightlog-bucket");
+		settings.setWorkerQueueName("mapreduce-workers");
+		
+		resp.sendRedirect("/_ah/pipeline/status.html?root=" + MapReduceJob.start(spec, settings));
 	}
 
 }
