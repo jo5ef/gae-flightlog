@@ -29,56 +29,61 @@
 			response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			return;
 		}
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	%>
 	
 	<%@include file="nav.jsp" %>
 	
+	
 	<div class="row">
 		<div class="col-md-6">
 			<h4>flight time</h4>
-			<table class="table">
-				<thead>
-					<tr>
-						<th></td>
-						<th>flight time</td>
-						<th>pic time</td>
-						<th>dual time</td>
-						<th>landings</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Last 90 Days</td>
-						<td>13:21</td>
-						<td>13:21</td>
-						<td>00:00</td>
-						<td>12</td>
-					</tr>
-					<tr>
-						<td>Last 6 Months</td>
-						<td>25:21</td>
-						<td>25:21</td>
-						<td>00:00</td>
-						<td>25</td>
-					</tr>
-					<tr>
-						<td>Last 12 Months</td>
-						<td>50:23</td>
-						<td>49:12</td>
-						<td>00:11</td>
-						<td>63</td>
-					</tr>
-					<tr>
-						<td>Total</td>
-						<td>105:23</td>
-						<td>62:12</td>
-						<td>43:11</td>
-						<td>250</td>
-					</tr>
-				</tbody>
-			</table>
+			[<a href="/sums">recalc</a>]
+			<%
+				Key totalsKey = KeyFactory.createKey("Totals", user.getUserId());
+				
+				Query query = new Query("Total", totalsKey);
+				List<Entity> totals = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+				
+				if(!totals.isEmpty()) {
+			%>
+				<table class="table">
+					<thead>
+						<tr>
+							<th></td>
+							<th>flight time</td>
+							<th>pic time</td>
+							<th>dual time</td>
+							<th>landings</td>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+							for(Entity total : totals) {
+								int flighttime = ((Long) total.getProperty("flighttime")).intValue();
+								int pic_time = ((Long) total.getProperty("pic_time")).intValue();
+								int dual_time = ((Long) total.getProperty("dual_time")).intValue();
+						%> 
+							<tr>
+								<td><%= total.getProperty("name") %></td>
+								<td><%= String.format("%02d:%02d", flighttime / 60, flighttime % 60) %></td>
+								<td><%= String.format("%02d:%02d", pic_time / 60, pic_time % 60) %></td>
+								<td><%= String.format("%02d:%02d", dual_time / 60, dual_time % 60) %></td>
+								<td><%= total.getProperty("landings") %></td>
+							</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+			<%
+				} else {
+			%>
+				<p>No totals calculated yet!</p>
+			<% } %>
 		</div>
-		<div class="col-md-6">
+		<!--<div class="col-md-6">
 			<h4>expirations</h4>
 			<table class="table">
 				<thead>
@@ -102,15 +107,14 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
+		</div>-->
 	</div>
 	
 	<h4>most recent flights</h4>
 	<%
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Key flightlogKey = KeyFactory.createKey("Flightlog", user.getUserId());
-		Query query = new Query("Flight", flightlogKey).addSort("departure_time", Query.SortDirection.DESCENDING);
-		List<Entity> flights = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+		Query flightQuery = new Query("Flight", flightlogKey).addSort("departure_time", Query.SortDirection.DESCENDING);
+		List<Entity> flights = datastore.prepare(flightQuery).asList(FetchOptions.Builder.withLimit(10));
 		
 		if(flights.isEmpty()) {
 	%>

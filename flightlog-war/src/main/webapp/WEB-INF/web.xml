@@ -21,6 +21,38 @@
 		<servlet-name>csvimport</servlet-name>
 		<url-pattern>/csvimport</url-pattern>
 	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>sums</servlet-name>
+		<servlet-class>us.ocact.flightlog.SumsServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>sums</servlet-name>
+		<url-pattern>/sums</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+  
+  <servlet-name>mapreduce</servlet-name>
+  <servlet-class>
+    com.google.appengine.tools.mapreduce.MapReduceServlet
+  </servlet-class>
+</servlet>
+			<servlet-mapping>
+			  <servlet-name>mapreduce</servlet-name>
+			<url-pattern>/mapreduce/*</url-pattern>
+			</servlet-mapping>
+			<servlet>
+			  <servlet-name>pipeline</servlet-name>
+			  <servlet-class>
+				com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet</servlet-class>
+			</servlet>
+			<servlet-mapping>
+			  <servlet-name>pipeline</servlet-name>
+			  <url-pattern>/_ah/pipeline/*</url-pattern>
+			</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>dashboard.jsp</welcome-file>
