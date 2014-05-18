@@ -31,5 +31,6 @@
 	<%@include file="nav.jsp" %>
 	
 	<h1>stats</h1>
+	</div>
 </body>
 </html>

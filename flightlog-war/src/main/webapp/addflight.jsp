@@ -33,43 +33,77 @@
 	
 	<%@include file="nav.jsp" %>
 
-	<h1>add a flight</h1>
-	<form action="/flightlog" method="post">
-		<table>
-			<thead>
-				<tr>
-					<th>registration</th>
-					<th>model</th>
-					<th>crew</th>
-					<th>departure</th>
-					<th>departure time</th>
-					<th>destination</th>
-					<th>arrival time</th>
-					<th>landings</th>
-					<th>pic_time</th>
-					<th>dual_time</th>
-					<th>price</th>
-					<th>remarks</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input type="text" name="registration"/></td>
-					<td><input type="text" name="model"/></td>
-					<td><input type="text" name="crew"/></td>
-					<td><input type="text" name="departure_id"/></td>
-					<td><input type="text" name="departure_time"/></td>
-					<td><input type="text" name="destination"/></td>
-					<td><input type="text" name="arrival_time"/></td>
-					<td><input type="number" name="landings"/></td>
-					<td><input type="number" name="pic_time"/></td>
-					<td><input type="number" name="dual_time"/></td>
-					<td><input type="text" name="price"/></td>
-					<td><input type="text" name="remarks"/></td>
-				</tr>
-			<tbody>
-		</table>
-		<input type="submit" value="add"/>
+	<form class="form-horizontal" role="form" action="/flightlog" method="post">
+		<div class="form-group">
+			<label for="date" class="col-sm-2 control-label">Date</label>
+			<div class="col-sm-10">
+				<input type="date" name="date" class="form-control" id="date" value="<%= new SimpleDateFormat("yyyy-MM-dd").format(new Date()) %>"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="registration" class="col-sm-2 control-label">Registration</label>
+			<div class="col-sm-4">
+				<input type="text" name="registration" class="form-control" id="registration"/>
+			</div>
+			<label for="model" class="col-sm-2 control-label">Model</label>
+			<div class="col-sm-4">
+				<input type="text" name="model" class="form-control" id="model"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="crew" class="col-sm-2 control-label">Crew</label>
+			<div class="col-sm-10">
+				<input type="text" name="crew" class="form-control" id="crew"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="departure_id" class="col-sm-2 control-label">Departure</label>
+			<div class="col-sm-4">
+				<input type="text" name="departure_id" class="form-control" id="departure_id"/>
+			</div>
+			<label for="departure_time" class="col-sm-2 control-label">Departure Time</label>
+			<div class="col-sm-4">
+				<input type="text" name="departure_time" class="form-control" id="departure_time" placeholder="HH:MM"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="destination" class="col-sm-2 control-label">Destination</label>
+			<div class="col-sm-4">
+				<input type="text" name="destination" class="form-control" id="destination"/>
+			</div>
+			<label for="arrival_time" class="col-sm-2 control-label">Arrival Time</label>
+			<div class="col-sm-4">
+				<input type="text" name="arrival_time" class="form-control" id="arrival_time" placeholder="HH:MM"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="landings" class="col-sm-2 control-label">Landings</label>
+			<div class="col-sm-10">
+				<input type="number" name="landings" class="form-control" id="landings" value="1"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="pic_time" class="col-sm-2 control-label">PIC Time</label>
+			<div class="col-sm-4">
+				<input type="text" name="pic_time" class="form-control" id="pic_time" placeholder="HH:MM"/>
+			</div>
+			<label for="dual_time" class="col-sm-2 control-label">Dual Time</label>
+			<div class="col-sm-4">
+				<input type="text" name="dual_time" class="form-control" id="dual_time" value="00:00" placeholder="HH:MM"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="remarks" class="col-sm-2 control-label">Remarks</label>
+			<div class="col-sm-10">
+				<input type="text" name="remarks" class="form-control" id="remarks"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">Add flight</button>
+			</div>
+		</div>
 	</form>
+	</div>
 </body>
 </html>

@@ -35,20 +35,23 @@ public class FlightlogServlet extends HttpServlet {
 		}
 
 		try {
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Key flightlogKey = KeyFactory.createKey("Flightlog", user.getUserId());
 			Entity flight = new Entity("Flight", flightlogKey);
 			flight.setProperty("registration", req.getParameter("registration"));
 			flight.setProperty("model", req.getParameter("model"));
 			flight.setProperty("crew", req.getParameter("crew"));
 			flight.setProperty("departure_id", req.getParameter("departure_id"));
-			flight.setProperty("departure_time", df.parse(req.getParameter("departure_time")));
+			flight.setProperty("departure_time", df.parse(String.format("%s %s:00",
+				req.getParameter("date"),
+				req.getParameter("departure_time"))));
 			flight.setProperty("destination", req.getParameter("destination"));
-			flight.setProperty("arrival_time", df.parse(req.getParameter("arrival_time")));
+			flight.setProperty("arrival_time", df.parse(String.format("%s %s:00",
+					req.getParameter("date"),
+					req.getParameter("arrival_time"))));
 			flight.setProperty("landings", Integer.parseInt(req.getParameter("landings")));
-			flight.setProperty("pic_time", Integer.parseInt(req.getParameter("pic_time")));
-			flight.setProperty("dual_time", Integer.parseInt(req.getParameter("dual_time")));
-			flight.setProperty("price", Float.parseFloat(req.getParameter("price")));
+			flight.setProperty("pic_time", parseTime(req.getParameter("pic_time")));
+			flight.setProperty("dual_time", parseTime(req.getParameter("dual_time")));
 			flight.setProperty("remarks", req.getParameter("remarks"));
 
 			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -58,5 +61,10 @@ public class FlightlogServlet extends HttpServlet {
 		} catch (ParseException ex) {
 			resp.sendError(401, ex.getMessage());
 		}
+	}
+	
+	private static int parseTime(String time) {
+		String[] parts = time.split(":");
+		return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
 	}
 }

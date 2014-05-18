@@ -31,9 +31,20 @@
 	<%@include file="nav.jsp" %>
 	
 	<h1>csv import</h1>
-	<form action="/csvimport" method="post" enctype="multipart/form-data">
-		<input type="file" name="file"/>
-		<input type="submit" value="upload"/>
+	
+	<form class="form-horizontal" role="form" action="/csvimport" method="post" enctype="multipart/form-data">
+		<div class="form-group">
+			<label for="file" class="col-sm-2 control-label">File</label>
+			<div class="col-sm-10">
+				<input type="file" name="file"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">Upload</button>
+			</div>
+		</div>
 	</form>
+	</div>
 </body>
 </html>
