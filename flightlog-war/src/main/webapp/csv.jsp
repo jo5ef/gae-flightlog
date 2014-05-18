@@ -11,22 +11,26 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link type="text/css" rel="stylesheet" href="styles.css"/>
-    <title>flightlog</title>
+	<%@include file="head.html" %>
+	<title>flightlog</title>
 </head>
 <body>
-	<h1>csv import</h1>
+	<div class="container">
 	<%
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user == null) {
-			response.sendRedirect(request.getRequestURI());
+			response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
 			return;
 		}
 	%>
+	
+	<%@include file="nav.jsp" %>
+	
+	<h1>csv import</h1>
 	<form action="/csvimport" method="post" enctype="multipart/form-data">
 		<input type="file" name="file"/>
 		<input type="submit" value="upload"/>
