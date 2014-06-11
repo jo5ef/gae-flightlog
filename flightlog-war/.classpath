@@ -3,7 +3,7 @@
   <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
   <classpathentry kind="output" path="target/flightlog-war-1.0-SNAPSHOT/WEB-INF/classes"/>
-  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/jdo/jdo2-api/2.3-eb/jdo2-api-2.3-eb.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/transaction/transaction-api/1.1/transaction-api-1.1.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -13,8 +13,8 @@
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.2/commons-io-2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/appengine/appengine-testing/1.9.4/appengine-testing-1.9.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/appengine/appengine-api-stubs/1.9.4/appengine-api-stubs-1.9.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/google/appengine/tools/appengine-mapreduce/0.5/appengine-mapreduce-0.5.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/google/appengine/tools/appengine-gcs-client/0.3.10/appengine-gcs-client-0.3.10.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/appengine/tools/appengine-mapreduce/0.7/appengine-mapreduce-0.7.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/appengine/tools/appengine-gcs-client/0.3.12/appengine-gcs-client-0.3.12.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/15.0/guava-15.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.3/joda-time-2.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/api-client/google-api-client/1.18.0-rc/google-api-client-1.18.0-rc.jar"/>
@@ -23,7 +23,11 @@
   <classpathentry kind="var" path="M2_REPO/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/josef/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.3/commons-codec-1.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/http-client/google-http-client-jackson2/1.18.0-rc/google-http-client-jackson2-1.18.0-rc.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.1.3/jackson-core-2.1.3.jar"/>
@@ -40,5 +44,9 @@
   <classpathentry kind="var" path="M2_REPO/it/unimi/dsi/fastutil/6.5.15/fastutil-6.5.15.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/easymock/easymock/3.0/easymock-3.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.2/objenesis-1.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.2/objenesis-1.2.jar" sourcepath="M2_REPO/org/objenesis/objenesis/1.2/objenesis-1.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/josef/.m2/repository/org/objenesis/objenesis/1.2/objenesis-1.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
 </classpath>

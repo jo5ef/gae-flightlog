@@ -18,6 +18,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.tools.mapreduce.DatastoreMutationPool.Params;
 import com.google.appengine.tools.mapreduce.MapReduceJob;
 import com.google.appengine.tools.mapreduce.MapReduceSettings;
 import com.google.appengine.tools.mapreduce.MapReduceSpecification;
@@ -59,7 +60,7 @@ public class SumsServlet extends HttpServlet {
 		
 		
 		
-		MapReduceSpecification spec = MapReduceSpecification.of("Sums",
+		MapReduceSpecification spec = new MapReduceSpecification.Builder(
 				new DatastoreInput("Flight", 15),
 				new Mapper<Entity, String, Serializable>() {
 					public void map(Entity e) {
@@ -87,8 +88,6 @@ public class SumsServlet extends HttpServlet {
 						}
 					}
 				},
-				Marshallers.getStringMarshaller(),
-				Marshallers.getSerializationMarshaller(),
 				new Reducer<String, Serializable, Entity>() {
 					public void reduce(String k, ReducerInput<Serializable> v) {
 						
@@ -111,11 +110,11 @@ public class SumsServlet extends HttpServlet {
 						emit(e);
 					}
 				}, 
-				new DatastoreOutput(15));
+				new DatastoreOutput()).build();
 		
-		MapReduceSettings settings = new MapReduceSettings();
-		settings.setBucketName("jo5ef-flightlog-bucket");
-		settings.setWorkerQueueName("mapreduce-workers");
+		MapReduceSettings settings = new MapReduceSettings.Builder().build();
+		//settings.setBucketName("jo5ef-flightlog.appspot.com");
+		//settings.setWorkerQueueName("mapreduce-workers");
 		
 		resp.sendRedirect("/_ah/pipeline/status.html?root=" + MapReduceJob.start(spec, settings));
 	}
