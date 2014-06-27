@@ -4,19 +4,21 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import us.ocact.flightlog.dto.FlightlogEntry;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.datastore.TransactionOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -53,9 +55,14 @@ public class FlightlogServlet extends HttpServlet {
 			flight.setProperty("pic_time", parseTime(req.getParameter("pic_time")));
 			flight.setProperty("dual_time", parseTime(req.getParameter("dual_time")));
 			flight.setProperty("remarks", req.getParameter("remarks"));
-
+			
 			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			TransactionOptions options = TransactionOptions.Builder.withXG(true);
+			Transaction tx = datastore.beginTransaction(options);
+			Key totalsKey = KeyFactory.createKey("Totals", user.getUserId());
 			datastore.put(flight);
+			new Totals().incrementTotals(totalsKey, new FlightlogEntry(flight), datastore);
+			tx.commit();
 			resp.sendRedirect("/");
 			
 		} catch (ParseException ex) {

@@ -43,75 +43,7 @@ public class SumsServlet extends HttpServlet {
 		
 		final Key totalsKey = KeyFactory.createKey("Totals", user.getUserId());
 		
-		Date referenceDate = new Date();
-		Calendar cal = GregorianCalendar.getInstance();
-		
-		cal.setTime(referenceDate);
-		cal.add(Calendar.DAY_OF_MONTH, -90);
-		final Date cutoff90days = cal.getTime();
-		
-		cal.setTime(referenceDate);
-		cal.add(Calendar.MONTH, -6);
-		final Date cutoff6months = cal.getTime();
-		
-		cal.setTime(referenceDate);
-		cal.add(Calendar.MONTH, -12);
-		final Date cutoff12months = cal.getTime();
-		
-		
-		
-		MapReduceSpecification spec = new MapReduceSpecification.Builder(
-				new DatastoreInput("Flight", 15),
-				new Mapper<Entity, String, Serializable>() {
-					public void map(Entity e) {
-						
-						Date departure_time = (Date) e.getProperty("departure_time");
-						Date arrival_time = (Date) e.getProperty("arrival_time");
-						
-						int[] data = new int[] {
-							(int) (arrival_time.getTime() - departure_time.getTime()) / 1000 / 60,
-							((Long) e.getProperty("pic_time")).intValue(),
-							((Long) e.getProperty("dual_time")).intValue(),
-							((Long) e.getProperty("landings")).intValue()
-						};
-						
-						emit("Total", data);
-						
-						if(departure_time.after(cutoff90days)) {
-							emit("Last 90 Days", data);
-						}
-						if(departure_time.after(cutoff6months)) {
-							emit("Last 6 Months", data);
-						}
-						if(departure_time.after(cutoff12months)) {
-							emit("Last 12 Months", data);
-						}
-					}
-				},
-				new Reducer<String, Serializable, Entity>() {
-					public void reduce(String k, ReducerInput<Serializable> v) {
-						
-						int flighttime = 0, pic_time = 0, dual_time = 0, landings = 0;
-						
-						while(v.hasNext()) {
-							int[] data = (int[]) v.next();
-							flighttime += data[0];
-							pic_time += data[1];
-							dual_time += data[2];
-							landings += data[3];
-						}
-						
-						Entity e = new Entity("Total", k, totalsKey);
-						e.setProperty("name", k);
-						e.setProperty("flighttime", flighttime);
-						e.setProperty("pic_time", pic_time);
-						e.setProperty("dual_time", dual_time);
-						e.setProperty("landings", landings);
-						emit(e);
-					}
-				}, 
-				new DatastoreOutput()).build();
-		
+		MapReduceSpecification spec = new Totals().createRecalcJob(totalsKey);
 		MapReduceSettings settings = new MapReduceSettings.Builder().build();
 		//settings.setBucketName("jo5ef-flightlog.appspot.com");
 		//settings.setWorkerQueueName("mapreduce-workers");
