@@ -44,7 +44,7 @@
 				Key totalsKey = KeyFactory.createKey("Totals", user.getUserId());
 				
 				Query query = new Query("Total", totalsKey);
-				List<Entity> totals = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+				List<Entity> totals = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
 				
 				if(!totals.isEmpty()) {
 			%>
