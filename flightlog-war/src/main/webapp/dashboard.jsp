@@ -44,7 +44,7 @@
 				Key totalsKey = KeyFactory.createKey("Totals", user.getUserId());
 				
 				Query query = new Query("Total", totalsKey);
-				List<Entity> totals = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+				List<Entity> totals = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
 				
 				if(!totals.isEmpty()) {
 			%>
@@ -114,7 +114,7 @@
 	<%
 		Key flightlogKey = KeyFactory.createKey("Flightlog", user.getUserId());
 		Query flightQuery = new Query("Flight", flightlogKey).addSort("departure_time", Query.SortDirection.DESCENDING);
-		List<Entity> flights = datastore.prepare(flightQuery).asList(FetchOptions.Builder.withLimit(10));
+		List<Entity> flights = datastore.prepare(flightQuery).asList(FetchOptions.Builder.withLimit(100));
 		
 		if(flights.isEmpty()) {
 	%>
